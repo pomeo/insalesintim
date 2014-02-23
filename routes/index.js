@@ -33,7 +33,7 @@ UsersSchema.add({
 var OrdersSchema = new Schema();
 
 OrdersSchema.add({
-    ordersid    : { type: Number, index: true },
+    orderid    : { type: Number, index: true },
     sum         : Number,
     quantity    : Number,
     status      : String,
@@ -46,12 +46,10 @@ OrdersSchema.add({
 var ItemsSchema = new Schema();
 
 ItemsSchema.add({
-    insales_id  : { type: Number, index: true },
-    url         : { type: String, lowercase: true },
-    pass        : String,
-    created_at  : Date,
-    updated_at  : Date,
-    enabled     : Boolean
+    itemid      : { type: Number, index: true },
+    name        : String,
+    quantity    : Number,
+    sum         : Number
 });
 
 var User = mongoose.model('User', UsersSchema);
