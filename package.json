@@ -19,6 +19,7 @@
         "xml2js"  : "~0.4.4",
         "restler" : "~3.2.2",
         "mongoose": "~3.8.12",
-        "moment"  : "~2.7.0"
+        "moment"  : "~2.7.0",
+	"nodemailer": "~0.6.5"
     }
 }
