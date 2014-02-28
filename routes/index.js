@@ -45,6 +45,12 @@ router.post('/signup', function(req, res){
      });
 });
 
+router.get('/unique/:partnerid', function(req, res) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,X-Requested-With');
+  res.send(200);
+});
+
 module.exports = router;
 
 //registration
