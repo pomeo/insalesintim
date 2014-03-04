@@ -151,6 +151,8 @@ UsersSchema.add({
     email       : { type: String, lowercase: true, unique: true },
     pass        : String,
     admin       : Boolean,
+    orders      : Number,
+    unique      : Number,
     created_at  : Date,
     updated_at  : Date,
     enabled     : Boolean
