@@ -147,37 +147,37 @@ mongoose.connect('mongodb://mongodb.fr1.server.sovechkin.com/intimmarket');
 var UsersSchema = new Schema();
 
 UsersSchema.add({
-    partnerid   : { type: Number, index: true, unique: true },
-    email       : { type: String, lowercase: true, unique: true },
-    pass        : String,
-    admin       : Boolean,
-    orders      : Number,
-    unique      : Number,
-    created_at  : Date,
-    updated_at  : Date,
-    enabled     : Boolean
+  partnerid   : { type: Number, index: true, unique: true },
+  email       : { type: String, lowercase: true, unique: true },
+  pass        : String,
+  admin       : Boolean,
+  orders      : Number,
+  unique      : Number,
+  created_at  : Date,
+  updated_at  : Date,
+  enabled     : Boolean
 });
 
 var OrdersSchema = new Schema();
 
 OrdersSchema.add({
-    orderid    : { type: Number, index: true, unique: true },
-    sum         : Number,
-    quantity    : Number,
-    status      : String,
-    items       : [ItemsSchema],
-    created_at  : Date,
-    updated_at  : Date,
-    enabled     : Boolean
+  orderid    : { type: Number, index: true, unique: true },
+  sum         : Number,
+  quantity    : Number,
+  status      : String,
+  items       : [ItemsSchema],
+  created_at  : Date,
+  updated_at  : Date,
+  enabled     : Boolean
 });
 
 var ItemsSchema = new Schema();
 
 ItemsSchema.add({
-    itemid      : { type: Number, index: true },
-    name        : String,
-    quantity    : Number,
-    sum         : Number
+  itemid      : { type: Number, index: true },
+  name        : String,
+  quantity    : Number,
+  sum         : Number
 });
 
 var User = mongoose.model('User', UsersSchema);
