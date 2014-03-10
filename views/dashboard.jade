@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  table.uk-table.uk-table-hover.uk-table-striped
+    caption Всего заказов: #{orders.length}
+    thead
+      tr
+        th ID
+        th Дата
+        th Сумма
+        th Кол-во
+        th Статус
+        th Комментарий
+        th &nbsp;
+    tbody
+    - for (var i = 0; i < orders.length; ++i) {
+      tr
+        td= orders[i].orderid
+        td= orders[i].created_at
+        td= orders[i].sum
+        td= orders[i].quantity
+        td= orders[i].status
+        td= orders[i].comment
+        td
+          button.uk-button(data-uk-toggle={target:'#i' + orders[i].orderid}) Подробности
+      tr.b-items.uk-hidden(id="i" + orders[i].orderid)
+        td(colspan="7")
+          table.uk-table.uk-table-condensed
+            thead
+              tr
+                th ID
+                th Название
+                th Кол-во
+                th Сумма
+            tbody
+            - each item in orders[i].items
+              tr
+                td= item.itemid
+                td
+                  a(href="http://" + url + "/product_by_id/" + item.productid)= item.name
+                td= item.quantity
+                td= item.sum
+    - }
