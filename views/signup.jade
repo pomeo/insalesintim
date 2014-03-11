@@ -6,15 +6,11 @@ block content
     div.uk-width-1-3.uk-height-1-1
       div.uk-vertical-align.uk-height-1-1
         div.uk-vertical-align-middle
-          form.uk-form
+          form.uk-form(action="/signup", method="post")
             fieldset(data-uk-margin)
-              legend Вход в партнёрскую панель
-              div.uk-form-icon.uk-form-row
+              legend Регистрация
+              div.uk-form-icon
                 i.uk-icon-envelope
-                input.uk-form-width-medium(type="text", placeholder="E-mail")
-              div.uk-form-icon.uk-form-row
-                i.uk-icon-lock
-                input.uk-form-width-medium(type="password", placeholder="Пароль")
-              div.uk-form-row
-                button.uk-button Войти
+                input.uk-form-width-medium.uk-margin-small-right(type="text", placeholder="E-mail", name="email")
+                button.uk-button Зарегистрироваться
     div.uk-width-1-3.uk-height-1-1 &nbsp;
