@@ -7,6 +7,7 @@ var express    = require('express'),
     Schema     = mongoose.Schema,
     moment     = require('moment'),
     nodemailer = require('nodemailer'),
+    xmlparser  = require('express-xml-bodyparser'),
     reg        = {};
 
 /* GET home page. */
@@ -58,6 +59,27 @@ router.get('/check/:partnerid/:orderid', function(req, res) {
   console.log(req.param('partnerid'));
   console.log(req.param('orderid'));
   res.send(200);
+router.post('/order/update', xmlparser({trim: false, explicitArray: false}), function(req, res) {
+  rest.get('http://' + process.env.insalesid + ':' + process.env.insalessecret + '@' + process.env.insalesurl + '/admin/orders/' + req.body.order.id[0]._ + '.xml').once('complete', function(o) {
+    Orders.findOne({orderid:o.order.id[0]._}, function(err, order) {
+      if (err || order == null) {
+        console.log(err);
+        res.send(200);
+      } else {
+        order.status = o.order['fulfillment-status'][0];
+        order.comment = o.order.comment[0];
+        order.updated_at = moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ');
+        order.save(function (err) {
+          if (err) {
+            console.log(err);
+            res.send(200);
+          } else {
+            res.send(200);
+          }
+        });
+      }
+    });
+  });
 });
 
 module.exports = router;

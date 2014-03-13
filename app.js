@@ -8,6 +8,7 @@ var stylus = require('stylus');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var xmlparser = require('express-xml-bodyparser');
 
 var routes = require('./routes/index');
 
@@ -24,6 +25,7 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+app.use(xmlparser());
 app.use(cookieParser());
 app.use(session({ store: new RedisStore({host:'redis.fr1.server.sovechkin.com', port:6379, pass:''}), secret: process.env.SECRET }))
 app.use(express.static(path.join(__dirname, 'public')));
