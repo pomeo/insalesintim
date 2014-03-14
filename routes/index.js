@@ -87,7 +87,7 @@ module.exports = router;
 //registration
 
 reg.autoLogin = function(email, pass, callback) {
-  User.findOne({email:email}, function(e, o) {
+  Users.findOne({email:email}, function(e, o) {
     if (o) {
       o.pass == pass ? callback(o) : callback(null);
     } else {
@@ -97,12 +97,12 @@ reg.autoLogin = function(email, pass, callback) {
 }
 
 reg.manualLogin = function(email, pass, callback) {
-  User.findOne({email:email}, function(e, o) {
+  Users.findOne({email:email}, function(e, o) {
     if (o == null) {
       callback('user-not-found');
     } else {
       validatePassword(pass, o.pass, function(err, res) {
-        if (res){
+        if (res) {
           callback(null, o);
         } else {
           callback('invalid-password');
@@ -112,14 +112,65 @@ reg.manualLogin = function(email, pass, callback) {
   });
 }
 
+reg.addNewAccount = function(res, newData, callback) {
+  Users.findOne({email:newData.email}, function(e, o) {
+    if (o) {
+      callback('email-taken');
+    } else {
+      var pass = generateSalt();
+      console.log(pass);
+      var message = {
+        from: 'Партнёрская программа intimmarket.com <robot@intimmarket.com>',
+        to: newData.email,
+        replyTo: 'support@intimmarket.com',
+        subject: 'Регистрация',
+        text: 'Ваш логин: ' + newData.email + '\nВаш пароль: ' + pass + '\n\nВойти в панель можно здесь http://www.intimmarket.com/page/partners\n\nВаша партнёрская ссылка находится внутри панели.'
+      };
+      transport.sendMail(message, function(error) {
+        if(error){
+          console.log(error.message);
+          return;
+        } else {
+          transport.close();
+          saltAndHash(pass, function(hash) {
+            Users.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, userid) {
+              if (userid == null) {
+                newData.partnerid  = 1000;
+              } else {
+                newData.partnerid  = userid.partnerid + 1;
+              }
+              newData.pass       = hash;
+              newData.admin      = 0;
+              newData.orders     = 0;
+              newData.unique     = 0;
+              newData.created_at = moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ');
+              newData.updated_at = newData.created_at;
+              newData.enabled    = 1;
+              console.log(newData);
+              var user = new Users(newData);
+              user.save(function (err) {
+                if (err) {
+                  res.send(e, 400);
+                } else {
+                  res.redirect('/complete');
+                }
+              });
+            });
+          });
+        }
+      });
+    }
+  });
+}
+
 reg.updatePassword = function(email, newPass, callback) {
-  User.findOne({email:email}, function(e, o) {
+  Users.findOne({email:email}, function(e, o) {
     if (e) {
       callback(e, null);
     } else {
       saltAndHash(newPass, function(hash) {
         o.pass = hash;
-        User.save(o, {safe: true}, callback);
+        o.save(o, callback);
       });
     }
   });
@@ -136,11 +187,11 @@ var generateSalt = function() {
 }
 
 reg.deactivateAccount = function(id, callback) {
-  User.remove({_id: getObjectId(id)}, callback);
+  Users.remove({_id: getObjectId(id)}, callback);
 }
 
 reg.activateAccount = function(id, callback) {
-  User.remove({_id: getObjectId(id)}, callback);
+  Users.remove({_id: getObjectId(id)}, callback);
 }
 
 var md5 = function(str) {
@@ -159,7 +210,7 @@ var validatePassword = function(plainPass, hashedPass, callback) {
 }
 
 var getObjectId = function(id) {
-  return User.db.bson_serializer.ObjectID.createFromHexString(id);
+  return Users.db.bson_serializer.ObjectID.createFromHexString(id);
 }
 
 //mongodb
@@ -169,7 +220,7 @@ mongoose.connect('mongodb://mongodb.fr1.server.sovechkin.com/intimmarket');
 var UsersSchema = new Schema();
 
 UsersSchema.add({
-  partnerid   : { type: Number, index: true, unique: true },
+  partnerid   : { type: Number, unique: true },
   email       : { type: String, lowercase: true, unique: true },
   pass        : String,
   admin       : Boolean,
@@ -183,10 +234,12 @@ UsersSchema.add({
 var OrdersSchema = new Schema();
 
 OrdersSchema.add({
-  orderid    : { type: Number, index: true, unique: true },
+  orderid     : { type: Number, unique: true },
+  partnerid   : { type: Number, index: true},
   sum         : Number,
   quantity    : Number,
   status      : String,
+  comment     : String,
   items       : [ItemsSchema],
   created_at  : Date,
   updated_at  : Date,
@@ -197,10 +250,11 @@ var ItemsSchema = new Schema();
 
 ItemsSchema.add({
   itemid      : { type: Number, index: true },
+  productid   : Number,
   name        : String,
   quantity    : Number,
   sum         : Number
 });
 
-var User = mongoose.model('User', UsersSchema);
-var Order = mongoose.model('Order', OrdersSchema);
+var Users = mongoose.model('Users', UsersSchema);
+var Orders = mongoose.model('Orders', OrdersSchema);
