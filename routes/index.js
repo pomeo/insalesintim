@@ -10,6 +10,14 @@ var express    = require('express'),
     xmlparser  = require('express-xml-bodyparser'),
     reg        = {};
 
+var transport = nodemailer.createTransport("SMTP", {
+  service: "yandex",
+  auth: {
+    user: process.env.EMAILLOGIN,
+    pass: process.env.EMAILPASS
+  }
+});
+
 /* GET home page. */
 router.get('/', function(req, res) {
   if (req.cookies.user == undefined || req.cookies.pass == undefined){
