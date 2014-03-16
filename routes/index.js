@@ -20,13 +20,13 @@ var transport = nodemailer.createTransport("SMTP", {
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  if (req.cookies.user == undefined || req.cookies.pass == undefined){
+  if (req.cookies.email == undefined || req.cookies.pass == undefined){
     res.render('index', { title: 'Партнёрская программа intimmarket.com' });
   } else {
-    req.autoLogin(req.cookies.user, req.cookies.pass, function(o){
+    reg.autoLogin(req.cookies.email, req.cookies.pass, function(o){
       if (o !== null) {
-        req.session.user = o;
-        res.redirect('/home');
+        req.session.email = o;
+        res.redirect('/dashboard');
       } else {
         res.render('index', { title: 'Партнёрская программа intimmarket.com' });
       }
