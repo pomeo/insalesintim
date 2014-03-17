@@ -34,6 +34,20 @@ router.get('/', function(req, res) {
   }
 });
 
+router.post('/', function(req, res) {
+  reg.manualLogin(req.param('email'), req.param('pass'), function(e, o){
+    if (!o){
+      res.send(e, 400);
+    } else {
+      req.session.email = o;
+      res.cookie('email', o.email, { maxAge: 900000 });
+      res.cookie('pass', o.pass, { maxAge: 900000 });
+      res.redirect('/dashboard');
+      //res.send(o, 200); для проверки что возвращается именно того пользователя
+    }
+  });
+});
+
 router.get('/signup', function(req, res) {
   res.render('signup', { title: 'Регистрация' });
 });
