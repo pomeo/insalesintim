@@ -52,13 +52,9 @@ router.get('/signup', function(req, res) {
   res.render('signup', { title: 'Регистрация' });
 });
 
-router.post('/signup', function(req, res){
-  AM.addNewAccount({
-    name    : req.param('name'),
-    email   : req.param('email'),
-    user    : req.param('user'),
-    pass    : req.param('pass'),
-    country : req.param('country')
+router.post('/signup', function(req, res) {
+  reg.addNewAccount(res, {
+    email : req.param('email')
   }, function(e) {
        if (e) {
          res.send(e, 400);
