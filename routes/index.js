@@ -68,7 +68,20 @@ router.get('/unique/:partnerid', function(req, res) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,X-Requested-With');
   console.log(req.param('partnerid'));
-  res.send(200);
+  Users.findOne({partnerid:req.param('partnerid')}, function(e, o) {
+    if (o) {
+      o.unique = o.unique + 1;
+      o.save(function (err) {
+        if (err) {
+          res.send(e, 400);
+        } else {
+          res.send(200);
+        }
+      });
+    } else {
+      res.send(200);
+    }
+  });
 });
 
 router.get('/check/:partnerid/:orderid', function(req, res) {
