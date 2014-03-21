@@ -64,6 +64,10 @@ router.post('/signup', function(req, res) {
      });
 });
 
+router.get('/complete', function(req, res) {
+  res.render('complete', { title: 'Регистрация завершена' });
+});
+
 router.get('/unique/:partnerid', function(req, res) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,X-Requested-With');
