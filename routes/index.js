@@ -68,6 +68,20 @@ router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
 
+router.get('/dashboard', function(req, res) {
+  if (req.session.email) {
+    Orders.find({partnerid:req.session.email.partnerid}, function(e, o) {
+      res.render('dashboard', {
+        title  : 'Партнёрская панель intimmarket.com',
+        orders : o,
+        url    : process.env.insalesurl
+      });
+    });
+  } else {
+    res.redirect('/');
+  }
+});
+
 router.get('/unique/:partnerid', function(req, res) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type,X-Requested-With');
