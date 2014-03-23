@@ -74,6 +74,7 @@ router.get('/dashboard', function(req, res) {
       res.render('dashboard', {
         title  : 'Партнёрская панель intimmarket.com',
         orders : o,
+        id     : req.session.email.partnerid,
         url    : process.env.insalesurl
       });
     });
