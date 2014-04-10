@@ -1,8 +1,10 @@
 extends layout
 
 block content
-  div.uk-alert.uk-alert-success.uk-text-center Ваша партнёрская ссылка: intimmarket.com/
-    strong ?partner=#{id}
+  div.uk-alert.uk-alert-success.uk-text-center(data-uk-alert)
+    a.uk-close.b-close(href="/logout") Выйти
+    | Ваша партнёрская ссылка: intimmarket.com/
+    strong ?p=#{id}
   table.uk-table.uk-table-hover.uk-table-striped
     caption Всего заказов: #{orders.length}
     thead
