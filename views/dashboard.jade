@@ -5,6 +5,23 @@ block content
     a.uk-close.b-close(href="/logout") Выйти
     | Ваша партнёрская ссылка: intimmarket.com/
     strong ?p=#{id}
+  div.uk-container-center(style="width:500px")
+    form.uk-form(action="/dashboard", method="get")
+      fieldset(data-uk-margin)
+        input.uk-margin-small-right.uk-form-width-small(type="text", name="fr", placeholder="01.01.2010", data-uk-datepicker="{format:'DD.MM.YYYY', i18n: {months:['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays:['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}")
+        input.uk-margin-small-right.uk-form-width-small(type="text", name="to", placeholder="01.01.2020", data-uk-datepicker="{format:'DD.MM.YYYY', i18n: {months:['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'], weekdays:['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}}")
+        div.uk-form-select.uk-button.uk-margin-small-right(data-uk-form-select)
+          span.uk-margin-small-right
+          i.uk-icon-caret-down
+          select(name="st")
+            option(value="all") все
+            option(value="new") новый
+            option(value="accepted") в обработке
+            option(value="approved") согласован
+            option(value="dispatched") отгружен
+            option(value="delivered") доставлен
+            option(value="declined") отменён
+        button(class="uk-button") Показать
   table.uk-table.uk-table-hover.uk-table-striped
     caption Всего заказов: #{orders.length}
     thead
