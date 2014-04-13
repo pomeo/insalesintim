@@ -37,7 +37,7 @@ block content
     - for (var i = 0; i < orders.length; ++i) {
       tr
         td= orders[i].orderid
-        td= orders[i].created_at
+        td= moment(orders[i].created_at).format("DD/MM/YYYY HH:mm Z")
         td= orders[i].sum
         td= orders[i].quantity
         td= orders[i].status
