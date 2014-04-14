@@ -40,7 +40,7 @@ block content
         td= moment(orders[i].created_at).format("DD/MM/YYYY HH:mm Z")
         td= orders[i].sum
         td= orders[i].quantity
-        td= orders[i].status
+        td= status[orders[i].status]
         td= orders[i].comment
         td
           button.uk-button(data-uk-toggle={target:'#i' + orders[i].orderid}) Подробности
