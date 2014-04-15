@@ -62,3 +62,13 @@ block content
                 td= item.quantity
                 td= item.sum
     - }
+  if per_page == 10
+    ul.uk-pagination
+      - for (var i = 0; i < count/per_page; ++i) {
+        if page == i
+          li.uk-active
+            span #{i+1}
+        else
+          li
+            a(href="?p=#{i}") #{i+1}
+      - }
