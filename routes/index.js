@@ -8,7 +8,17 @@ var express    = require('express'),
     moment     = require('moment'),
     nodemailer = require('nodemailer'),
     xmlparser  = require('express-xml-bodyparser'),
-    reg        = {};
+    reg        = {},
+    status     = {};
+
+status = {
+  'new'        : 'новый',
+  'accepted'   : 'в обработке',
+  'approved'   : 'согласован',
+  'dispatched' : 'отгружен',
+  'delivered'  : 'доставлен',
+  'declined'   : 'отменён'
+};
 
 var transport = nodemailer.createTransport("SMTP", {
   service: "yandex",
