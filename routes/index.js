@@ -33,7 +33,7 @@ router.get('/', function(req, res) {
   if (req.cookies.email == undefined || req.cookies.pass == undefined){
     res.render('index', { title: 'Партнёрская программа intimmarket.com' });
   } else {
-    reg.autoLogin(req.cookies.email, req.cookies.pass, function(o){
+    reg.autoLogin(res, req.cookies.email, req.cookies.pass, function(o){
       if (o !== null) {
         req.session.email = o;
         res.redirect('/dashboard');
@@ -45,7 +45,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  reg.manualLogin(req.param('email'), req.param('pass'), function(e, o){
+  reg.manualLogin(res, req.param('email'), req.param('pass'), function(e, o){
     if (!o){
       res.send(e, 400);
     } else {
@@ -199,28 +199,36 @@ module.exports = router;
 
 //registration
 
-reg.autoLogin = function(email, pass, callback) {
+reg.autoLogin = function(res, email, pass, callback) {
   Users.findOne({email:email}, function(e, o) {
     if (o) {
-      o.pass == pass ? callback(o) : callback(null);
+      if (o.enabled) {
+        o.pass == pass ? callback(o) : callback(null);
+      } else {
+        res.redirect('/disabled');
+      }
     } else {
       callback(null);
     }
   });
 }
 
-reg.manualLogin = function(email, pass, callback) {
+reg.manualLogin = function(res, email, pass, callback) {
   Users.findOne({email:email}, function(e, o) {
     if (o == null) {
-      callback('user-not-found');
+      res.redirect('/usernotfound');
     } else {
-      validatePassword(pass, o.pass, function(err, res) {
-        if (res) {
-          callback(null, o);
-        } else {
-          callback('invalid-password');
-        }
-      });
+      if (o.enabled) {
+        validatePassword(pass, o.pass, function(e, chk) {
+          if (chk) {
+            callback(null, o);
+          } else {
+            res.redirect('/invalidpassword');
+          }
+        });
+      } else {
+        res.redirect('/disabled');
+      }
     }
   });
 }
@@ -228,7 +236,7 @@ reg.manualLogin = function(email, pass, callback) {
 reg.addNewAccount = function(res, newData, callback) {
   Users.findOne({email:newData.email}, function(e, o) {
     if (o) {
-      callback('email-taken');
+      res.redirect('/emailtaken');
     } else {
       var pass = generateSalt();
       console.log(pass);
@@ -242,7 +250,7 @@ reg.addNewAccount = function(res, newData, callback) {
       transport.sendMail(message, function(error) {
         if(error){
           console.log(error.message);
-          return;
+          res.redirect('/regerror');
         } else {
           transport.close();
           saltAndHash(pass, function(hash) {
