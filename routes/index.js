@@ -122,48 +122,54 @@ router.get('/check/:partnerid/:orderid', function(req, res) {
   res.header('Access-Control-Allow-Headers', 'Content-Type,X-Requested-With');
   console.log(req.param('partnerid'));
   console.log(req.param('orderid'));
-  Users.findOne({partnerid:req.param('partnerid')}, function(e, u) {
+  Users.findOne({partnerid:req.param('partnerid'), enabled: true}, function(e, u) {
     if (u) {
-      rest.get('http://' + process.env.insalesid + ':' + process.env.insalessecret + '@' + process.env.insalesurl + '/admin/orders/' + req.param('orderid') + '.xml').once('complete', function(order) {
-        if (order instanceof Error) {
-          console.log('Error: ' + order.message);
+      Orders.findOne({orderid:req.param('orderid')}, function(err, order) {
+        if (order == null) {
           res.send(200);
         } else {
-          u.orders = u.orders + 1;
-          u.save(function (err) {
-            if (err) {
-              res.send(e, 400);
+          rest.get('http://' + process.env.insalesid + ':' + process.env.insalessecret + '@' + process.env.insalesurl + '/admin/orders/' + req.param('orderid') + '.xml').once('complete', function(order) {
+            if (order instanceof Error) {
+              console.log('Error: ' + order.message);
+              res.send(200);
             } else {
-              var sum = 0;
-              order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
-                sum = sum + parseInt(value.quantity[0]._);
-              });
-              var o = new Orders({
-                orderid    : order['order'].id[0]._,
-                partnerid  : u.partnerid,
-                sum        : parseFloat(order['order']['items-price'][0]._),
-                quantity   : sum,
-                status     : order['order']['fulfillment-status'][0],
-                comment    : order['order'].comment[0],
-                created_at : moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-                updated_at : moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-                enabled    : true
-              });
-              order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
-                o.items.push({
-                  itemid    : value.id[0]._,
-                  productid : value['product-id'][0]._,
-                  name      : value.title[0],
-                  quantity  : value.quantity[0]._,
-                  sum       : parseInt(value['sale-price'][0]._)
-                });
-              });
-              o.save(function (err) {
+              u.orders = u.orders + 1;
+              u.save(function (err) {
                 if (err) {
-                  console.log(err);
-                  res.send(200);
+                  res.send(e, 400);
                 } else {
-                  res.send(200);
+                  var sum = 0;
+                  order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
+                    sum = sum + parseInt(value.quantity[0]._);
+                  });
+                  var o = new Orders({
+                    orderid    : order['order'].id[0]._,
+                    partnerid  : u.partnerid,
+                    sum        : parseFloat(order['order']['items-price'][0]._),
+                    quantity   : sum,
+                    status     : order['order']['fulfillment-status'][0],
+                    comment    : order['order'].comment[0],
+                    created_at : moment(new Date(order['order']['created-at'][0]._)).format(),
+                    updated_at : moment(new Date(order['order']['updated-at'][0]._)).format(),
+                    enabled    : true
+                  });
+                  order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
+                    o.items.push({
+                      itemid    : value.id[0]._,
+                      productid : value['product-id'][0]._,
+                      name      : value.title[0],
+                      quantity  : value.quantity[0]._,
+                      sum       : parseInt(value['sale-price'][0]._)
+                    });
+                  });
+                  o.save(function (err) {
+                    if (err) {
+                      console.log(err);
+                      res.send(200);
+                    } else {
+                      res.send(200);
+                    }
+                  });
                 }
               });
             }
