@@ -294,14 +294,39 @@ reg.addNewAccount = function(res, newData, callback) {
   });
 }
 
-reg.updatePassword = function(email, newPass, callback) {
-  Users.findOne({email:email}, function(e, o) {
-    if (e) {
-      callback(e, null);
+reg.updatePassword = function(res, newData, callback) {
+  Users.findOne({email:newData.email}, function(e, o) {
+    if (o == null) {
+      res.redirect('/usernotfound');
     } else {
-      saltAndHash(newPass, function(hash) {
-        o.pass = hash;
-        o.save(o, callback);
+      var pass = generateSalt();
+      console.log(pass);
+      var message = {
+        from: 'Партнёрская программа intimmarket.com <robot@intimmarket.com>',
+        to: o.email,
+        replyTo: 'support@intimmarket.com',
+        subject: 'Ваш новый пароль',
+        text: 'Ваш логин: ' + newData.email + '\nВаш новый пароль: ' + pass + '\n\nВойти в панель можно здесь http://www.intimmarket.com/page/partners\n\nВаша партнёрская ссылка находится внутри панели.'
+      };
+      transport.sendMail(message, function(error) {
+        if(error){
+          console.log(error.message);
+          res.redirect('/regerror');
+        } else {
+          transport.close();
+          saltAndHash(pass, function(hash) {
+            o.pass       = hash;
+            o.updated_at = moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ');
+            console.log(o);
+            o.save(function (err) {
+              if (err) {
+                res.send(e, 400);
+              } else {
+                res.redirect('/complete');
+              }
+            });
+          });
+        }
       });
     }
   });
