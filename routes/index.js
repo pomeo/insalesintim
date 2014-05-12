@@ -78,6 +78,10 @@ router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
 
+router.get('/disabled', function(req, res) {
+  res.render('disabled', { title: 'Ваш аккаунт выключен' });
+});
+
 router.get('/dashboard', function(req, res) {
   if (req.session.email) {
     if (req.session.email.admin) {
