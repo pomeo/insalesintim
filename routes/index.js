@@ -74,6 +74,11 @@ router.post('/signup', function(req, res) {
      });
 });
 
+router.get('/logout', function(req, res) {
+  req.session.destroy();
+  res.redirect('/');
+});
+
 router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
