@@ -79,6 +79,9 @@ router.get('/logout', function(req, res) {
   res.redirect('/');
 });
 
+router.get('/emailtaken', function(req, res) {
+  res.render('emailtaken', { title: 'Адрес электронной почты уже занят' });
+});
 router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
