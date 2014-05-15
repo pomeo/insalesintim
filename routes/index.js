@@ -82,6 +82,10 @@ router.get('/logout', function(req, res) {
 router.get('/emailtaken', function(req, res) {
   res.render('emailtaken', { title: 'Адрес электронной почты уже занят' });
 });
+
+router.get('/invalidpassword', function(req, res) {
+  res.render('invalidpassword', { title: 'Неправильный пароль' });
+});
 router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
