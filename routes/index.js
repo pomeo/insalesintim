@@ -86,6 +86,10 @@ router.get('/emailtaken', function(req, res) {
 router.get('/invalidpassword', function(req, res) {
   res.render('invalidpassword', { title: 'Неправильный пароль' });
 });
+
+router.get('/usernotfound', function(req, res) {
+  res.render('usernotfound', { title: 'Пользователь не найден' });
+});
 router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
