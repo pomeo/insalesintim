@@ -90,6 +90,10 @@ router.get('/invalidpassword', function(req, res) {
 router.get('/usernotfound', function(req, res) {
   res.render('usernotfound', { title: 'Пользователь не найден' });
 });
+
+router.get('/regerror', function(req, res) {
+  res.render('regerror', { title: 'Произошла ошибка' });
+});
 router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
