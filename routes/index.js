@@ -94,6 +94,23 @@ router.get('/usernotfound', function(req, res) {
 router.get('/regerror', function(req, res) {
   res.render('regerror', { title: 'Произошла ошибка' });
 });
+
+router.get('/reset', function(req, res) {
+  res.render('reset', { title: 'Сброс пароля' });
+});
+
+router.post('/reset', function(req, res) {
+  reg.updatePassword(res, {
+    email : req.param('email')
+  }, function(e) {
+       if (e) {
+         res.send(e, 400);
+       } else {
+         res.send('ok', 200);
+       }
+     });
+});
+
 router.get('/complete', function(req, res) {
   res.render('complete', { title: 'Регистрация завершена' });
 });
