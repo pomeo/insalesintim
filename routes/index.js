@@ -58,6 +58,56 @@ router.post('/', function(req, res) {
   });
 });
 
+router.get('/admin/:partnerid', function(req, res) {
+  if (req.session.email.admin) {
+    var fr,to,st;
+    var page = req.query.p;
+    var per_page;
+    if (page == null) {
+      page = 0;
+    }
+    if (req.query.fr) {
+      fr = moment(req.query.fr, "DD.MM.YYYY");
+    } else {
+      fr = new Date(1970, 01, 01);
+    }
+    if (req.query.to) {
+      to = moment(req.query.to, "DD.MM.YYYY");
+    } else {
+      to = new Date(2100, 01, 01);
+    }
+    if (status[req.query.st]) {
+      st = req.query.st;
+    } else {
+      st = {$not: {$size: 0}};
+    }
+    if ((to.toISOString() == new Date(2100, 01, 01).toISOString())&&(fr.toISOString() == new Date(1970, 01, 01).toISOString())&&(!status[req.query.st])) {
+      per_page = 10;
+    } else {
+      per_page = 1000000;
+    }
+    Users.findOne({partnerid:req.param('partnerid')}, function(ue, uo) {
+      Orders.count({partnerid: uo.partnerid}, function(err, count) {
+        Orders.find({partnerid: uo.partnerid, 'created_at': {'$gte': fr, '$lt': to}, status: st}, {}, { sort: { 'created_at' : -1 }, skip: page*per_page, limit: per_page }, function(e, o) {
+          res.render('dashboardadmin', {
+            title    : 'Партнёрская панель intimmarket.com',
+            orders   : o,
+            count    : count,
+            page     : page,
+            per_page : per_page,
+            unique   : uo.unique,
+            moment   : moment,
+            status   : status,
+            id       : uo.partnerid,
+            url      : process.env.insalesurl
+          });
+        });
+      });
+    });
+  } else {
+    res.redirect('/dashboard');
+  }
+});
 router.get('/signup', function(req, res) {
   res.render('signup', { title: 'Регистрация' });
 });
