@@ -58,6 +58,27 @@ router.post('/', function(req, res) {
   });
 });
 
+router.get('/admin', function(req, res) {
+  if (req.session.email.admin) {
+    var page = req.query.p;
+    var per_page = 10;
+    if (page == null) {
+      page = 0;
+    }
+    Users.find({}, {}, { sort: { 'partnerid' : -1 }, skip: page*per_page, limit: per_page }, function(e, o) {
+      res.render('admin', {
+        title    : 'Панель администратора intimmarket.com',
+        users    : o,
+        page     : page,
+        per_page : per_page,
+        moment   : moment
+      });
+    });
+  } else {
+    res.redirect('/dashboard');
+  }
+});
+
 router.get('/admin/:partnerid', function(req, res) {
   if (req.session.email.admin) {
     var fr,to,st;
