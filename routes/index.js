@@ -146,6 +146,24 @@ router.get('/admin/disable/:partnerid', function(req, res) {
     res.redirect('/admin');
   }
 });
+
+router.get('/admin/enable/:partnerid', function(req, res) {
+  if (req.session.email.admin) {
+    Users.findOne({partnerid:req.param('partnerid')}, function(e, o) {
+      o.enabled = true;
+      o.save(function (err) {
+        if (err) {
+          res.send(e, 400);
+        } else {
+          res.redirect('/admin');
+        }
+      });
+    });
+  } else {
+    res.redirect('/admin');
+  }
+});
+
 router.get('/signup', function(req, res) {
   res.render('signup', { title: 'Регистрация' });
 });
