@@ -182,6 +182,8 @@ router.post('/signup', function(req, res) {
 
 router.get('/logout', function(req, res) {
   req.session.destroy();
+  req.cookies.email = null;
+  req.cookies.pass = null;
   res.redirect('/');
 });
 
