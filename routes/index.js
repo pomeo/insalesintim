@@ -537,14 +537,6 @@ var generateSalt = function() {
   return salt;
 }
 
-reg.deactivateAccount = function(id, callback) {
-  Users.remove({_id: getObjectId(id)}, callback);
-}
-
-reg.activateAccount = function(id, callback) {
-  Users.remove({_id: getObjectId(id)}, callback);
-}
-
 var md5 = function(str) {
   return crypto.createHash('md5').update(str).digest('hex');
 }
@@ -558,10 +550,6 @@ var validatePassword = function(plainPass, hashedPass, callback) {
   var salt = hashedPass.substr(0, 10);
   var validHash = salt + md5(plainPass + salt);
   callback(null, hashedPass === validHash);
-}
-
-var getObjectId = function(id) {
-  return Users.db.bson_serializer.ObjectID.createFromHexString(id);
 }
 
 //mongodb
