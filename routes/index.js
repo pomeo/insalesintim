@@ -466,7 +466,11 @@ reg.addNewAccount = function(res, newData, callback) {
                 newData.partnerid  = userid.partnerid + 1;
               }
               newData.pass       = hash;
-              newData.admin      = 0;
+              if (newData.partnerid == 1000) {
+                newData.admin      = 1;
+              } else {
+                newData.admin      = 0;
+              }
               newData.orders     = 0;
               newData.unique     = 0;
               newData.created_at = moment().format('ddd, DD MMM YYYY HH:mm:ss ZZ');
