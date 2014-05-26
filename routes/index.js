@@ -322,39 +322,39 @@ router.get('/check/:partnerid/:orderid', function(req, res) {
               console.log('Error: ' + order.message);
               res.send(200);
             } else {
-              u.orders = u.orders + 1;
-              u.save(function (err) {
+              var sum = 0;
+              order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
+                sum = sum + parseInt(value.quantity[0]._);
+              });
+              var o = new Orders({
+                orderid    : order['order'].id[0]._,
+                partnerid  : u.partnerid,
+                sum        : parseFloat(order['order']['items-price'][0]._),
+                quantity   : sum,
+                status     : order['order']['fulfillment-status'][0],
+                comment    : order['order'].comment[0],
+                created_at : moment(new Date(order['order']['created-at'][0]._)).format(),
+                updated_at : moment(new Date(order['order']['updated-at'][0]._)).format(),
+                enabled    : true
+              });
+              order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
+                o.items.push({
+                  itemid    : value.id[0]._,
+                  productid : value['product-id'][0]._,
+                  name      : value.title[0],
+                  quantity  : value.quantity[0]._,
+                  sum       : parseInt(value['sale-price'][0]._)
+                });
+              });
+              o.save(function (err) {
                 if (err) {
-                  res.send(e, 400);
+                  console.log(err);
+                  res.send(200);
                 } else {
-                  var sum = 0;
-                  order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
-                    sum = sum + parseInt(value.quantity[0]._);
-                  });
-                  var o = new Orders({
-                    orderid    : order['order'].id[0]._,
-                    partnerid  : u.partnerid,
-                    sum        : parseFloat(order['order']['items-price'][0]._),
-                    quantity   : sum,
-                    status     : order['order']['fulfillment-status'][0],
-                    comment    : order['order'].comment[0],
-                    created_at : moment(new Date(order['order']['created-at'][0]._)).format(),
-                    updated_at : moment(new Date(order['order']['updated-at'][0]._)).format(),
-                    enabled    : true
-                  });
-                  order['order']['order-lines'][0]['order-line'].forEach(function (value, index) {
-                    o.items.push({
-                      itemid    : value.id[0]._,
-                      productid : value['product-id'][0]._,
-                      name      : value.title[0],
-                      quantity  : value.quantity[0]._,
-                      sum       : parseInt(value['sale-price'][0]._)
-                    });
-                  });
-                  o.save(function (err) {
+                  u.orders = u.orders + 1;
+                  u.save(function (err) {
                     if (err) {
-                      console.log(err);
-                      res.send(200);
+                      res.send(e, 400);
                     } else {
                       res.send(200);
                     }
