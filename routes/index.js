@@ -314,7 +314,7 @@ router.get('/check/:partnerid/:orderid', function(req, res) {
   Users.findOne({partnerid:req.param('partnerid'), enabled: true}, function(e, u) {
     if (u) {
       Orders.findOne({orderid:req.param('orderid')}, function(err, order) {
-        if (order == null) {
+        if (order !== null) {
           res.send(200);
         } else {
           rest.get('http://' + process.env.insalesid + ':' + process.env.insalessecret + '@' + process.env.insalesurl + '/admin/orders/' + req.param('orderid') + '.xml').once('complete', function(order) {
