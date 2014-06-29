@@ -61,7 +61,7 @@ router.post('/', function(req, res) {
 router.get('/admin', function(req, res) {
   if (req.session.email.admin) {
     var page = req.query.p;
-    var per_page = 10;
+    var per_page = 50;
     if (page == null) {
       page = 0;
     }
@@ -103,7 +103,7 @@ router.get('/admin/:partnerid', function(req, res) {
       st = {$not: {$size: 0}};
     }
     if ((to.toISOString() == new Date(2100, 01, 01).toISOString())&&(fr.toISOString() == new Date(1970, 01, 01).toISOString())&&(!status[req.query.st])) {
-      per_page = 10;
+      per_page = 50;
     } else {
       per_page = 1000000;
     }
@@ -259,7 +259,7 @@ router.get('/dashboard', function(req, res) {
         st = {$not: {$size: 0}};
       }
       if ((to.toISOString() == new Date(2100, 01, 01).toISOString())&&(fr.toISOString() == new Date(1970, 01, 01).toISOString())&&(!status[req.query.st])) {
-        per_page = 10;
+        per_page = 50;
       } else {
         per_page = 1000000;
       }
