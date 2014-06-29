@@ -333,6 +333,7 @@ router.get('/check/:partnerid/:orderid', function(req, res) {
               });
               var o = new Orders({
                 orderid    : order['order'].id[0]._,
+                number     : order['order'].number[0]._,
                 partnerid  : u.partnerid,
                 sum        : parseFloat(order['order']['items-price'][0]._),
                 quantity   : sum,
@@ -583,6 +584,7 @@ var OrdersSchema = new Schema();
 
 OrdersSchema.add({
   orderid     : { type: Number, unique: true },
+  number      : { type: Number, index: true},
   partnerid   : { type: Number, index: true},
   sum         : Number,
   quantity    : Number,
