@@ -181,10 +181,15 @@ router.post('/signup', function(req, res) {
 });
 
 router.get('/logout', function(req, res) {
-  req.session.destroy();
-  req.cookies.email = null;
-  req.cookies.pass = null;
-  res.redirect('/');
+  if (req.session) {
+    req.session.destroy(function() {
+      res.clearCookie('email', { path: '/' });
+      res.clearCookie('pass', { path: '/' });
+      res.redirect('/');
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 
 router.get('/emailtaken', function(req, res) {
