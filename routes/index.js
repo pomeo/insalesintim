@@ -33,7 +33,7 @@ router.get('/', function(req, res) {
   if (req.cookies.email == undefined || req.cookies.pass == undefined){
     res.render('index', { title: 'Партнёрская программа intimmarket.com' });
   } else {
-    reg.autoLogin(res, req.cookies.email, req.cookies.pass, function(o){
+    reg.autoLogin(res, req.cookies.email.toLowerCase(), req.cookies.pass, function(o){
       if (o !== null) {
         req.session.email = o;
         res.redirect('/dashboard');
@@ -45,7 +45,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  reg.manualLogin(res, req.param('email'), req.param('pass'), function(e, o){
+  reg.manualLogin(res, req.param('email').toLowerCase(), req.param('pass'), function(e, o){
     if (!o){
       res.send(e, 400);
     } else {
