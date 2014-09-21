@@ -53,3 +53,10 @@ block content
           li
             a(href="?p=#{i}") #{i+1}
       - }
+  form.uk-form.uk-margin-large-left(id="upload", action="/upload", method="post", enctype="multipart/form-data")
+    fieldset(data-uk-margin)
+      input(type="file", name="file", placeholder="")
+      button.uk-button Закачать файл
+  p.uk-margin-large-left
+    a.uk-margin-right(href="/sample.csv") Пример файла
+    span левая колонка(номер заказа), правая(номер партнёра)
