@@ -8,6 +8,8 @@ var express    = require('express'),
     moment     = require('moment'),
     nodemailer = require('nodemailer'),
     xmlparser  = require('express-xml-bodyparser'),
+    csv        = require('fast-csv'),
+    fs         = require('fs'),
     reg        = {},
     status     = {};
 
