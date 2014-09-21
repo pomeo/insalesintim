@@ -81,6 +81,37 @@ router.get('/admin', function(req, res) {
   }
 });
 
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+router.post('/upload', function(req, res) {
+  if (req.session.email.admin) {
+    csv
+    .fromPath(req.files.file.path)
+    .on("data", function(data){
+      if (isNumber(data[0])) {
+        Orders.findOne({number:data[0]}, function(e, o) {
+          o.partnerid = data[1];
+          o.save(function (err) {
+            if (err) {
+              res.send(e, 400);
+            }
+          });
+        });
+      } else {
+        res.send('error');
+      }
+    })
+    .on("end", function(){
+      fs.unlink(req.files.file.path, function (err) {
+        if (err) throw err;
+        res.send('success');
+      });
+    });
+  }
+});
+
 router.get('/admin/:partnerid', function(req, res) {
   if (req.session.email.admin) {
     var fr,to,st;
