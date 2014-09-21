@@ -1,6 +1,14 @@
 extends layout
 
 block content
+  div#modaluploadok.uk-modal
+    div.uk-modal-dialog
+      a.uk-modal-close.uk-close
+      | Файл успешно обработан
+  div#modaluploadnotok.uk-modal
+    div.uk-modal-dialog
+      a.uk-modal-close.uk-close
+      | Произошла ошибка обработки файла
   div.uk-alert.uk-alert-warning.uk-text-center(data-uk-alert)
     a.uk-close.b-close(href="/logout") Выйти
     | Панель администратора
