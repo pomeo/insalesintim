@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded());
 app.use(multer({ dest: '/tmp'}))
 app.use(xmlparser());
 app.use(cookieParser());
-app.use(session({ store: new RedisStore({host:'redis.fr1.server.sovechkin.com', port:6379, pass:''}), secret: process.env.SECRET }))
+app.use(session({ store: new RedisStore({host:'127.0.0.1', port:6379, pass:''}), secret: process.env.SECRET }))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(stylus.middleware({
       src: __dirname + '/stylus',
