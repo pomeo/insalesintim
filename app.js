@@ -79,6 +79,8 @@ var server = app.listen(app.get('port'), '127.0.0.1', function() {
                debug('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
              });
 
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
-});
+// server with small memory, need manual release
+setInterval(function () {
+  global.gc();
+  console.log((process.memoryUsage().rss / 1024 / 1024).toFixed(2) + 'Mb');
+}, 10000);
