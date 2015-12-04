@@ -8,19 +8,15 @@ set :application, "test2.sovechkin.com"
 require           "capistrano-offroad"
 offroad_modules   "defaults", "supervisord"
 set :repository,  "git@github.com:pomeo/insalesintim.git"
-set :deploy_to,   "/home/ubuntu/projects/intimmarket"
-set :supervisord_start_group, "intim"
-set :supervisord_stop_group, "intim"
+set :supervisord_start_group, "app"
+set :supervisord_stop_group,  "app"
 #========================
 #ROLES
 #========================
-role :app,        "ubuntu@#{application}"
+set  :gateway,    "#{application}" # main server
+role :app,        "10.3.253.2"     # container
 
-namespace :deploy do
-  desc "Change node.js port"
-  task :chg_port do
-    run "sed -i 's/3000/3500/g' #{current_path}/app.js"
-  end
-end
-
-after "deploy:create_symlink", "deploy:npm_install", "deploy:chg_port", "deploy:restart"
+after "deploy:create_symlink",
+      "deploy:npm_install",
+      "deploy:cleanup",
+      "deploy:restart"
