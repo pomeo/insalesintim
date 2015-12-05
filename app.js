@@ -75,12 +75,6 @@ app.use(function(err, req, res, next) {
     });
 });
 
-var server = app.listen(app.get('port'), '127.0.0.1', function() {
-               debug('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
-             });
-
-// server with small memory, need manual release
-setInterval(function () {
-  global.gc();
-  console.log((process.memoryUsage().rss / 1024 / 1024).toFixed(2) + 'Mb');
-}, 10000);
+app.listen(app.get('port'), '0.0.0.0', function() {
+  debug('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
+});
