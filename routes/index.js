@@ -597,7 +597,7 @@ var validatePassword = function(plainPass, hashedPass, callback) {
 
 //mongodb
 
-mongoose.connect('mongodb://127.0.0.1/intimmarket');
+mongoose.connect('mongodb://10.3.100.1/intimmarket');
 
 var UsersSchema = new Schema();
 
